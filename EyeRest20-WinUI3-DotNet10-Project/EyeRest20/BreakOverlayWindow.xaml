@@ -1,0 +1,51 @@
+<Window
+    x:Class="EyeRest20.BreakOverlayWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Eye Rest Curtain">
+
+    <Grid Background="#090D16">
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="24" MaxWidth="600">
+            
+            <!-- Eye Health Icon -->
+            <FontIcon Glyph="&#xE890;" FontFamily="Segoe Fluent Icons" FontSize="48" Foreground="#38BDF8" HorizontalAlignment="Center" />
+
+            <!-- Calming Breathing Guide Title -->
+            <TextBlock Text="Look 20 Feet (6m) Away"
+                       FontSize="36"
+                       FontWeight="Bold"
+                       Foreground="#FFFFFF"
+                       HorizontalAlignment="Center"
+                       TextAlignment="Center" />
+
+            <TextBlock Text="Relax your eyes on a distant window, wall, or object. Inhale slowly and breathe."
+                       FontSize="16"
+                       Foreground="#94A3B8"
+                       HorizontalAlignment="Center"
+                       TextAlignment="Center" />
+
+            <!-- Large Countdown -->
+            <Border Background="#1E293B" CornerRadius="20" Padding="28,16" HorizontalAlignment="Center">
+                <TextBlock x:Name="OverlayCountdownText"
+                           Text="20s"
+                           FontSize="44"
+                           FontWeight="Bold"
+                           Foreground="#38BDF8"
+                           HorizontalAlignment="Center" />
+            </Border>
+
+            <!-- Breathing Guidance Indicator -->
+            <TextBlock x:Name="BreathingGuideText"
+                       Text="Breathe in gently..."
+                       FontSize="15"
+                       Foreground="#CBD5E1"
+                       HorizontalAlignment="Center" />
+
+            <!-- Dismiss Early Button -->
+            <Button Content="End Break Early (Esc)"
+                    HorizontalAlignment="Center"
+                    Click="DismissButton_Click"
+                    Margin="0,16,0,0" />
+        </StackPanel>
+    </Grid>
+</Window>

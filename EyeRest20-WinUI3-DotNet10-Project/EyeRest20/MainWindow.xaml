@@ -1,0 +1,243 @@
+<Window
+    x:Class="EyeRest20.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="EyeRest 20-20-20">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel MaxWidth="620" Margin="32,24,32,32" Spacing="20">
+                
+                <!-- Header / App Brand -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" Spacing="4">
+                        <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                            <FontIcon Glyph="&#xE8B9;" FontFamily="Segoe Fluent Icons" FontSize="24" Foreground="#0EA5E9"/>
+                            <TextBlock Text="EyeRest 20-20-20" Style="{ThemeResource TitleTextBlockStyle}" FontWeight="SemiBold" />
+                        </StackPanel>
+                        <TextBlock Text="The 20-20-20 rule: Every 20 mins, look 20 feet away for 20 seconds."
+                                   Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+
+                    <!-- Status Pill Badge -->
+                    <Border Grid.Column="1" x:Name="StatusBadgeBorder" Background="#E0F2FE" CornerRadius="16" Padding="12,6" VerticalAlignment="Center">
+                        <TextBlock x:Name="StatusBadgeText" Text="Ready to Focus" FontSize="13" FontWeight="Medium" Foreground="#0369A1" />
+                    </Border>
+                </Grid>
+
+                <!-- Hero Timer Card -->
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="16"
+                        Padding="28">
+                    <StackPanel Spacing="18" HorizontalAlignment="Center">
+                        
+                        <!-- Progress Ring & Big Time Display -->
+                        <Grid Width="220" Height="220" HorizontalAlignment="Center">
+                            <ProgressRing x:Name="TimerProgressRing"
+                                          Width="220"
+                                          Height="220"
+                                          IsIndeterminate="False"
+                                          Value="0"
+                                          Maximum="100" />
+                            
+                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="2">
+                                <TextBlock x:Name="TimerDisplay"
+                                           Text="20:00"
+                                           FontSize="52"
+                                           FontWeight="Bold"
+                                           HorizontalAlignment="Center"
+                                           FontFamily="Segoe UI Variable Display" />
+                                <TextBlock x:Name="TimerPhaseLabel"
+                                           Text="Work Session"
+                                           Style="{ThemeResource BodyTextBlockStyle}"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                           HorizontalAlignment="Center" />
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Cycle and Rest Stats -->
+                        <TextBlock x:Name="StatsSummaryText"
+                                   Text="Cycle 0 • 0 eye rests completed today"
+                                   HorizontalAlignment="Center"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                   Style="{ThemeResource CaptionTextBlockStyle}" />
+
+                        <!-- Primary Controls -->
+                        <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center" Margin="0,8,0,0">
+                            <Button x:Name="StartPauseButton"
+                                    Content="Start Work Cycle"
+                                    Style="{ThemeResource AccentButtonStyle}"
+                                    Width="160"
+                                    Height="40"
+                                    Click="StartPauseButton_Click" />
+                            
+                            <Button x:Name="ResetButton"
+                                    Content="Reset"
+                                    Width="90"
+                                    Height="40"
+                                    Click="ResetButton_Click" />
+
+                            <Button x:Name="SkipButton"
+                                    Content="Skip to Break"
+                                    Width="110"
+                                    Height="40"
+                                    Click="SkipButton_Click" />
+                        </StackPanel>
+
+                        <!-- Quick Test Preset -->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="8">
+                            <TextBlock Text="Fast Demo Mode (5s Work / 5s Break for testing):" VerticalAlignment="Center" Style="{ThemeResource CaptionTextBlockStyle}" />
+                            <ToggleSwitch x:Name="FastTestModeToggle" OnContent="Active" OffContent="Off" Toggled="FastTestModeToggle_Toggled" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- Customization & Settings Section -->
+                <TextBlock Text="Timer &amp; Alert Customization" Style="{ThemeResource SubtitleTextBlockStyle}" FontWeight="SemiBold" Margin="0,8,0,0"/>
+
+                <!-- Durations Card -->
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="12"
+                        Padding="20">
+                    <StackPanel Spacing="16">
+                        <!-- Work Duration -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Work Duration (Minutes)" FontWeight="Medium" />
+                                <TextBlock Text="Length of focused screen time before eye rest alert" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            </StackPanel>
+                            <NumberBox Grid.Column="1" x:Name="WorkDurationNumberBox" Value="20" Minimum="1" Maximum="120" SpinButtonPlacementMode="Inline" Width="110" ValueChanged="Duration_ValueChanged"/>
+                        </Grid>
+
+                        <MenuFlyoutSeparator />
+
+                        <!-- Break Duration -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Break Duration (Seconds)" FontWeight="Medium" />
+                                <TextBlock Text="Recommended 20 seconds to relax ciliary eye muscles" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            </StackPanel>
+                            <NumberBox Grid.Column="1" x:Name="BreakDurationNumberBox" Value="20" Minimum="5" Maximum="300" SpinButtonPlacementMode="Inline" Width="110" ValueChanged="Duration_ValueChanged"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Audio Sounds Card -->
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="12"
+                        Padding="20">
+                    <StackPanel Spacing="16">
+                        <!-- Break Alert Sound -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Text="Break Alert Sound" FontWeight="Medium" />
+                                <TextBlock Text="Plays when the 20-minute work session completes" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            </StackPanel>
+                            <ComboBox Grid.Column="1" x:Name="BreakSoundComboBox" Width="160" Margin="0,0,8,0" SelectionChanged="BreakSoundComboBox_SelectionChanged" />
+                            <Button Grid.Column="2" Content="Test" Click="TestBreakSound_Click" />
+                        </Grid>
+
+                        <MenuFlyoutSeparator />
+
+                        <!-- Resume Alert Sound -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Text="Resume Work Sound" FontWeight="Medium" />
+                                <TextBlock Text="Plays when the 20-second break finishes to resume work" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            </StackPanel>
+                            <ComboBox Grid.Column="1" x:Name="ResumeSoundComboBox" Width="160" Margin="0,0,8,0" SelectionChanged="ResumeSoundComboBox_SelectionChanged" />
+                            <Button Grid.Column="2" Content="Test" Click="TestResumeSound_Click" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Features Card (Fullscreen, Notifications, Tray) -->
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="12"
+                        Padding="20">
+                    <StackPanel Spacing="16">
+                        
+                        <!-- Fullscreen Screensaver Curtain Overlay -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Fullscreen Screensaver Curtain" FontWeight="Medium" />
+                                <TextBlock Text="Blocks screen during 20s break with breathing guide (Press Esc to dismiss anytime)" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            </StackPanel>
+                            <Button Grid.Column="1" Content="Preview" Margin="0,0,12,0" Click="PreviewOverlay_Click" />
+                            <ToggleSwitch Grid.Column="2" x:Name="FullscreenOverlayToggle" IsOn="True" />
+                        </Grid>
+
+                        <MenuFlyoutSeparator />
+
+                        <!-- Native Windows Notifications -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Native Windows Notifications (Toast)" FontWeight="Medium" />
+                                <TextBlock Text="Shows interactive Windows notification even when minimized" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            </StackPanel>
+                            <ToggleSwitch Grid.Column="1" x:Name="NativeNotificationsToggle" IsOn="True" />
+                        </Grid>
+
+                        <MenuFlyoutSeparator />
+
+                        <!-- Auto-Loop -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Automatic Continuous Loop" FontWeight="Medium" />
+                                <TextBlock Text="Automatically start the next 20-min cycle after break completes" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            </StackPanel>
+                            <ToggleSwitch Grid.Column="1" x:Name="AutoLoopToggle" IsOn="True" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>
