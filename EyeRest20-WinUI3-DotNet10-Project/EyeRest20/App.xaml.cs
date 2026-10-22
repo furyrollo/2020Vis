@@ -22,9 +22,35 @@ public partial class App : Application
 
     private const int SW_RESTORE = 9;
 
+    // ---- Power throttling opt-out --------------------------------------------------
+    // When the window is minimized / hidden in the tray, Windows 11 may put the process into
+    // "Efficiency mode" (EcoQoS) and coarsen its timers, which can delay alerts. Opting out
+    // keeps the background timer precise. (Cost is negligible: the app wakes twice a second.)
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern bool SetProcessInformation(IntPtr hProcess, int processInformationClass,
+        ref PROCESS_POWER_THROTTLING_STATE processInformation, uint processInformationSize);
+
+    [DllImport("kernel32.dll")]
+    private static extern IntPtr GetCurrentProcess();
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct PROCESS_POWER_THROTTLING_STATE
+    {
+        public uint Version;
+        public uint ControlMask;
+        public uint StateMask;
+    }
+
+    private const int ProcessPowerThrottling = 4;
+    private const uint PROCESS_POWER_THROTTLING_CURRENT_VERSION = 1;
+    private const uint PROCESS_POWER_THROTTLING_EXECUTION_SPEED = 0x1;
+    private const uint PROCESS_POWER_THROTTLING_IGNORE_TIMER_RESOLUTION = 0x4;
+
     public App()
     {
         this.InitializeComponent();
+
+        DisablePowerThrottling();
 
         // 1. Register for Windows App SDK AppNotifications
         try
@@ -36,6 +62,31 @@ public partial class App : Application
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"[EyeRest] Notification registration notice: {ex.Message}");
+        }
+    }
+
+    private static void DisablePowerThrottling()
+    {
+        try
+        {
+            var state = new PROCESS_POWER_THROTTLING_STATE
+            {
+                Version = PROCESS_POWER_THROTTLING_CURRENT_VERSION,
+                ControlMask = PROCESS_POWER_THROTTLING_EXECUTION_SPEED | PROCESS_POWER_THROTTLING_IGNORE_TIMER_RESOLUTION,
+                StateMask = 0 // 0 = throttling OFF for the controlled features
+            };
+            if (!SetProcessInformation(GetCurrentProcess(), ProcessPowerThrottling, ref state,
+                    (uint)Marshal.SizeOf<PROCESS_POWER_THROTTLING_STATE>()))
+            {
+                // Older Windows builds may not support IGNORE_TIMER_RESOLUTION - retry with execution speed only.
+                state.ControlMask = PROCESS_POWER_THROTTLING_EXECUTION_SPEED;
+                SetProcessInformation(GetCurrentProcess(), ProcessPowerThrottling, ref state,
+                    (uint)Marshal.SizeOf<PROCESS_POWER_THROTTLING_STATE>());
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[EyeRest] Power throttling opt-out not available: {ex.Message}");
         }
     }
 
@@ -83,13 +134,17 @@ public partial class App : Application
         }
     }
 
+    /// <summary>Shows the main window again (also when it is hidden in the system tray).</summary>
     public static void RestoreMainWindow()
     {
-        if (MainWindowInstance == null) return;
+        MainWindowInstance?.ShowFromTray();
+    }
 
-        var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(MainWindowInstance);
+    public static void BringToForeground(Window window)
+    {
+        var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
         ShowWindow(hWnd, SW_RESTORE);
         SetForegroundWindow(hWnd);
-        MainWindowInstance.Activate();
+        window.Activate();
     }
 }

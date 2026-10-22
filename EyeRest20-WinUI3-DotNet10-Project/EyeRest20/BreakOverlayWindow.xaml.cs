@@ -43,6 +43,10 @@ public sealed partial class BreakOverlayWindow : Window
         };
         _breathingTimer.Start();
 
+        // Always stop the breathing timer when the window closes (including when the main
+        // window closes it automatically at the end of the break), so it never ticks on a closed window.
+        this.Closed += (s, e) => _breathingTimer.Stop();
+
         // Listen for Esc key to dismiss early
         if (this.Content is UIElement rootElement)
         {

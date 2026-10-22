@@ -180,6 +180,29 @@
                             <ComboBox Grid.Column="1" x:Name="ResumeSoundComboBox" Width="160" Margin="0,0,8,0" SelectionChanged="ResumeSoundComboBox_SelectionChanged" />
                             <Button Grid.Column="2" Content="Test" Click="TestResumeSound_Click" />
                         </Grid>
+
+                        <MenuFlyoutSeparator />
+
+                        <!-- Custom Tones -->
+                        <StackPanel Spacing="10">
+                            <StackPanel>
+                                <TextBlock Text="Custom Tones" FontWeight="Medium" />
+                                <TextBlock x:Name="CustomSoundsInfoText"
+                                           Text="Use your own sound file (.wav, .mp3, .m4a, .wma, .aac, .flac). Added tones appear in both lists above as &quot;Custom: name&quot;."
+                                           TextWrapping="Wrap"
+                                           Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <Button Content="Add Sound File..." Click="AddCustomSound_Click" />
+                                <Button Content="Open Custom Sounds Folder" Click="OpenCustomSoundsFolder_Click" />
+                                <Button Content="Refresh List" Click="RefreshCustomSounds_Click" />
+                            </StackPanel>
+                            <TextBlock x:Name="CustomSoundsStatusText"
+                                       Text=""
+                                       TextWrapping="Wrap"
+                                       Visibility="Collapsed"
+                                       Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        </StackPanel>
                     </StackPanel>
                 </Border>
 
@@ -234,6 +257,37 @@
                                 <TextBlock Text="Automatically start the next 20-min cycle after break completes" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                             </StackPanel>
                             <ToggleSwitch Grid.Column="1" x:Name="AutoLoopToggle" IsOn="True" />
+                        </Grid>
+
+                        <MenuFlyoutSeparator />
+
+                        <!-- System Tray -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Minimize to System Tray" FontWeight="Medium" />
+                                <TextBlock Text="Minimizing hides the window to the tray (next to the clock). Click the tray icon to reopen; right-click for menu." TextWrapping="Wrap" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            </StackPanel>
+                            <Button Grid.Column="1" Content="Send to Tray" Margin="0,0,12,0" Click="SendToTray_Click" />
+                            <ToggleSwitch Grid.Column="2" x:Name="MinimizeToTrayToggle" IsOn="True" Toggled="TraySetting_Toggled" />
+                        </Grid>
+
+                        <MenuFlyoutSeparator />
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Close Button Keeps Running in Tray" FontWeight="Medium" />
+                                <TextBlock Text="The window's X button hides EyeRest to the tray instead of quitting. Use the tray menu's &quot;Exit EyeRest&quot; to quit." TextWrapping="Wrap" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            </StackPanel>
+                            <ToggleSwitch Grid.Column="1" x:Name="CloseToTrayToggle" IsOn="False" Toggled="TraySetting_Toggled" />
                         </Grid>
                     </StackPanel>
                 </Border>
