@@ -6,6 +6,8 @@ namespace EyeRest20;
 
 /// <summary>
 /// Manages native Windows Toast notifications using Windows App SDK AppNotificationManager.
+/// All toasts are SILENT (MuteAudio) - the app plays its own user-selected tone instead,
+/// so the Windows notification sound never doubles up with the app's alert sound.
 /// </summary>
 public static class NotificationManager
 {
@@ -25,6 +27,7 @@ public static class NotificationManager
                 .AddButton(new AppNotificationButton("Snooze 2m")
                     .AddArgument("action", "snooze"))
                 .SetScenario(AppNotificationScenario.Alarm) // High visibility alarm style
+                .MuteAudio() // No Windows toast sound - the app's own selected tone is played instead
                 .BuildNotification();
 
             AppNotificationManager.Default.Show(notification);
@@ -47,6 +50,7 @@ public static class NotificationManager
                 .AddText("Work timer has resumed for 20 minutes. Keep up the great eye health habits!")
                 .AddButton(new AppNotificationButton("Open EyeRest")
                     .AddArgument("action", "open_app"))
+                .MuteAudio() // No Windows toast sound - the app's own selected tone is played instead
                 .BuildNotification();
 
             AppNotificationManager.Default.Show(notification);

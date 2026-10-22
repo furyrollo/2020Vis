@@ -33,5 +33,10 @@
     <Content Include="Assets\**">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <!-- Drop your own tones (.wav/.mp3/.m4a/.wma/.aac/.flac) into the CustomSounds folder before building
+         and they are bundled with the app and listed as "Custom: <name>" in the sound menus. -->
+    <Content Include="CustomSounds\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>
